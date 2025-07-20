@@ -1,75 +1,65 @@
 body {
+  font-family: Arial, sans-serif;
+  background-color: #F1F5F7;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f1f5f7;
-  font-family: Arial, sans-serif;
   margin: 0;
 }
 
-.container {
+.timer-container {
   text-align: center;
+  position: relative;
 }
 
 .get-ready {
-  font-size: 1rem;
-  margin-bottom: 5px;
+  font-size: 1.5em;
   color: #19373E;
+  margin-bottom: 10px;
+  display: none;
 }
 
-.timer-wrapper {
+.circle {
   position: relative;
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 20px;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
 }
 
-#countdown {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1B1A1A;
+.countdown {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 1.75em;
+  font-weight: bold;
+  color: #1B1A1A;
   z-index: 2;
 }
 
-svg {
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
   transform: rotate(-90deg);
-  width: 100%;
-  height: 100%;
 }
 
-circle {
-  fill: none;
-  stroke-width: 10;
-}
-
-circle.bg {
-  stroke: #B1ECFC;
-}
-
-circle.fg {
-  stroke: #4BA3BB;
-  stroke-linecap: round;
-  stroke-dasharray: 440;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s linear;
+.controls {
+  margin-top: 20px;
 }
 
 button {
-  margin: 6px;
-  padding: 8px 16px;
   background-color: #4BA3BB;
-  color: white;
   border: none;
-  border-radius: 4px;
+  color: white;
+  padding: 10px 14px;
+  margin: 0 5px;
+  border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
 }
 
-button:disabled {
-  background-color: #767575;
-  cursor: not-allowed;
+button:hover {
+  background-color: #367f91;
 }

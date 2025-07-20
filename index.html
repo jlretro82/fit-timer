@@ -1,53 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fit Timer</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-      }
-      #timer {
-        font-size: 48px;
-        margin-bottom: 20px;
-      }
-      button {
-        font-size: 20px;
-        padding: 10px 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="timer">30</div>
-    <button onclick="startTimer()">Start Timer</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fit Timer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    #time {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
 
-    <audio id="bell" src="bell.mp3"></audio>
-    <audio id="chime" src="timer.mp3"></audio>
+  <div id="time">30</div>
+  <div>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="pauseTimer()">Pause</button>
+    <button onclick="resumeTimer()">Resume</button>
+    <button onclick="stopTimer()">Stop</button>
+  </div>
 
-    <script>
-      function startTimer() {
-        let timeLeft = 30;
-        const timerDisplay = document.getElementById("timer");
-        const bell = document.getElementById("bell");
-        const chime = document.getElementById("chime");
+  <audio id="bell" src="bell.mp3"></audio>
+  <audio id="tick" src="timer.mp3" loop></audio>
 
-        bell.play();
+  <script>
+    let timer;
+    let countdown = 30;
+    let isPaused = false;
+    let tickAudio = document.getElementById("tick");
+    let bellAudio = document.getElementById("bell");
+    let display = document.getElementById("time");
 
-        const countdown = setInterval(() => {
-          timeLeft--;
-          timerDisplay.textContent = timeLeft;
-          if (timeLeft === 0) {
-            clearInterval(countdown);
-            chime.play();
+    function updateDisplay() {
+      display.textContent = countdown > 0 ? countdown : "Done";
+    }
+
+    function startTimer() {
+      stopTimer(); // reset everything
+      countdown = 30;
+      isPaused = false;
+      updateDisplay();
+      timer = setInterval(() => {
+        if (!isPaused) {
+          countdown--;
+          updateDisplay();
+
+          if (countdown === 10) {
+            tickAudio.play();
           }
-        }, 1000);
-      }
-    </script>
-  </body>
+
+          if (countdown <= 0) {
+            clearInterval(timer);
+            tickAudio.pause();
+            tickAudio.currentTime = 0;
+            bellAudio.play();
+          }
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      isPaused = true;
+    }
+
+    function resumeTimer() {
+      isPaused = false;
+    }
+
+    function stopTimer() {
+      clearInterval(timer);
+      tickAudio.pause();
+      tickAudio.currentTime = 0;
+      bellAudio.pause();
+      bellAudio.currentTime = 0;
+      countdown = 30;
+      updateDisplay();
+    }
+  </script>
+
+</body>
 </html>
+

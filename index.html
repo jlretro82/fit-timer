@@ -4,91 +4,105 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fit Timer</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      margin-top: 100px;
-    }
-    #time {
-      font-size: 64px;
-      margin-bottom: 20px;
-    }
-    button {
-      font-size: 16px;
-      padding: 10px 20px;
-      margin: 5px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <div id="time">30</div>
-  <div>
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resumeTimer()">Resume</button>
-    <button onclick="stopTimer()">Stop</button>
+  <div class="timer-container">
+    <svg class="progress-ring" width="200" height="200">
+      <circle class="ring-bg" r="90" cx="100" cy="100" />
+      <circle class="ring-fill" r="90" cx="100" cy="100" />
+    </svg>
+    <div class="time-display" id="time">30</div>
+    <div class="controls">
+      <button onclick="startTimer()">Start</button>
+      <button onclick="pauseTimer()">Pause</button>
+      <button onclick="resumeTimer()">Resume</button>
+      <button onclick="stopTimer()">Stop</button>
+    </div>
   </div>
 
-  <audio id="bell" src="bell.mp3"></audio>
-  <audio id="tick" src="timer.mp3" loop></audio>
+  <audio id="tick" src="timer.mp3" preload="auto"></audio>
+  <audio id="bell" src="bell.mp3" preload="auto"></audio>
 
   <script>
-    let timer;
-    let countdown = 30;
+    let duration = 30; // main timer duration
+    let countdown = 3; // "get ready" countdown
+    let timeLeft = duration;
+    let interval = null;
     let isPaused = false;
-    let tickAudio = document.getElementById("tick");
-    let bellAudio = document.getElementById("bell");
-    let display = document.getElementById("time");
+    let hasStarted = false;
+    let ticking = document.getElementById("tick");
+    let bell = document.getElementById("bell");
+    let ring = document.querySelector(".ring-fill");
 
-    function updateDisplay() {
-      display.textContent = countdown > 0 ? countdown : "Done";
+    const display = document.getElementById("time");
+
+    function updateRing(percent) {
+      const radius = 90;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - percent * circumference;
+      ring.style.strokeDashoffset = offset;
     }
 
     function startTimer() {
-      stopTimer(); // reset everything
-      countdown = 30;
-      isPaused = false;
-      updateDisplay();
-      timer = setInterval(() => {
-        if (!isPaused) {
-          countdown--;
-          updateDisplay();
+      if (hasStarted) return;
+      hasStarted = true;
+      display.textContent = "Get Ready...";
+      let ready = countdown;
 
-          if (countdown === 10) {
-            tickAudio.play();
-          }
-
-          if (countdown <= 0) {
-            clearInterval(timer);
-            tickAudio.pause();
-            tickAudio.currentTime = 0;
-            bellAudio.play();
-          }
+      const prepInterval = setInterval(() => {
+        display.textContent = ready;
+        ready--;
+        if (ready < 0) {
+          clearInterval(prepInterval);
+          display.textContent = timeLeft;
+          ticking.play();
+          interval = setInterval(runTimer, 1000);
         }
       }, 1000);
     }
 
+    function runTimer() {
+      if (!isPaused && timeLeft > 0) {
+        timeLeft--;
+        display.textContent = timeLeft;
+        updateRing(timeLeft / duration);
+        if (timeLeft === 0) {
+          clearInterval(interval);
+          ticking.pause();
+          ticking.currentTime = 0;
+          bell.play();
+        }
+      }
+    }
+
     function pauseTimer() {
       isPaused = true;
+      ticking.pause();
     }
 
     function resumeTimer() {
-      isPaused = false;
+      if (timeLeft > 0) {
+        isPaused = false;
+        ticking.play();
+      }
     }
 
     function stopTimer() {
-      clearInterval(timer);
-      tickAudio.pause();
-      tickAudio.currentTime = 0;
-      bellAudio.pause();
-      bellAudio.currentTime = 0;
-      countdown = 30;
-      updateDisplay();
+      clearInterval(interval);
+      ticking.pause();
+      ticking.currentTime = 0;
+      bell.pause();
+      bell.currentTime = 0;
+      timeLeft = duration;
+      display.textContent = timeLeft;
+      updateRing(1);
+      hasStarted = false;
     }
-  </script>
 
+    // Initial ring setup
+    updateRing(1);
+  </script>
 </body>
 </html>
 

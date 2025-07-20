@@ -3,173 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Timer</title>
+  <title>Fit Timer</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
+      margin: 0;
+      font-family: sans-serif;
       background-color: #1B1A1A;
       color: #B1ECFC;
-      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      margin: 0;
     }
 
-    #getReadyText {
+    .timer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .get-ready-text {
       font-size: 1.2rem;
-      margin-bottom: 0.3rem;
+      margin-bottom: 10px;
+      height: 20px;
     }
 
-    #circle {
-      position: relative;
-      width: 140px;
-      height: 140px;
+    .circle {
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
-      border: 8px solid #4BA3BB;
+      border: 10px solid #4BA3BB;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
-    }
-
-    #timer {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: bold;
-      color: #B1ECFC;
+      position: relative;
+      margin-bottom: 15px;
+      background-color: #1B1A1A;
     }
 
-    .button-group {
+    .controls {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     button {
-      padding: 6px 14px;
-      font-size: 0.9rem;
       background-color: #19373E;
       color: #B1ECFC;
-      border: none;
-      border-radius: 6px;
+      border: 1px solid #4BA3BB;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.2s;
     }
 
     button:hover {
       background-color: #4BA3BB;
+      color: #1B1A1A;
     }
 
     @media (max-width: 500px) {
-      #circle {
-        width: 100px;
-        height: 100px;
-        border-width: 6px;
+      .circle {
+        width: 120px;
+        height: 120px;
+        font-size: 1.5rem;
       }
-      #timer {
-        font-size: 1.2rem;
-      }
-      #getReadyText {
+
+      .get-ready-text {
         font-size: 1rem;
+        height: 18px;
       }
+
       button {
-        padding: 5px 10px;
+        padding: 6px 12px;
         font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
-
-  <div id="getReadyText"></div>
-  <div id="circle"><div id="timer">30</div></div>
-
-  <div class="button-group">
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resumeTimer()">Resume</button>
-    <button onclick="resetTimer()">Reset</button>
+  <div class="timer-container">
+    <div class="get-ready-text" id="get-ready-text"></div>
+    <div class="circle" id="circle">30</div>
+    <div class="controls">
+      <button onclick="startTimer()">Start</button>
+      <button onclick="pauseTimer()">Pause</button>
+      <button onclick="resumeTimer()">Resume</button>
+      <button onclick="resetTimer()">Reset</button>
+    </div>
   </div>
 
-  <audio id="tick" src="https://www.soundjay.com/clock/sounds/clock-ticking-5.mp3" preload="auto"></audio>
-  <audio id="bell" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4e8c0161d6.mp3" preload="auto"></audio>
+  <audio id="ticking-sound" src="/ticking.mp3" loop></audio>
+  <audio id="bell-sound" src="/bell.mp3"></audio>
 
   <script>
     let duration = 30;
     let countdown;
-    let getReadyCountdown;
-    let remaining = duration;
+    let timeLeft = duration;
+    let tickingSound = document.getElementById("ticking-sound");
+    let bellSound = document.getElementById("bell-sound");
+    let circle = document.getElementById("circle");
+    let getReadyText = document.getElementById("get-ready-text");
     let isPaused = false;
-
-    const timerEl = document.getElementById('timer');
-    const getReadyTextEl = document.getElementById('getReadyText');
-    const tickSound = document.getElementById('tick');
-    const bellSound = document.getElementById('bell');
-
-    function updateDisplay(value) {
-      timerEl.textContent = value;
-    }
+    let getReadyInterval;
 
     function startTimer() {
       resetTimer();
-      getReadyTextEl.textContent = 'Get Ready...';
-      let getReady = 3;
-      updateDisplay(getReady);
-      getReadyCountdown = setInterval(() => {
-        getReady--;
-        if (getReady <= 0) {
-          clearInterval(getReadyCountdown);
-          getReadyTextEl.textContent = '';
-          beginMainCountdown();
+      let getReadyTime = 3;
+      getReadyText.textContent = "Get Ready...";
+      circle.textContent = getReadyTime;
+      getReadyInterval = setInterval(() => {
+        getReadyTime--;
+        if (getReadyTime > 0) {
+          circle.textContent = getReadyTime;
         } else {
-          updateDisplay(getReady);
+          clearInterval(getReadyInterval);
+          getReadyText.textContent = "";
+          runCountdown();
         }
       }, 1000);
     }
 
-    function beginMainCountdown() {
-      remaining = duration;
-      updateDisplay(remaining);
-      tickSound.loop = true;
-      tickSound.play();
+    function runCountdown() {
+      timeLeft = duration;
+      updateCircle();
+      tickingSound.play().catch(() => {});
       countdown = setInterval(() => {
         if (!isPaused) {
-          remaining--;
-          updateDisplay(remaining);
-          if (remaining <= 0) {
+          timeLeft--;
+          updateCircle();
+          if (timeLeft <= 0) {
             clearInterval(countdown);
-            tickSound.pause();
-            tickSound.currentTime = 0;
+            tickingSound.pause();
+            tickingSound.currentTime = 0;
             bellSound.play();
-            updateDisplay(0);
           }
         }
       }, 1000);
     }
 
+    function updateCircle() {
+      circle.textContent = timeLeft;
+    }
+
     function pauseTimer() {
       isPaused = true;
-      tickSound.pause();
+      tickingSound.pause();
     }
 
     function resumeTimer() {
-      if (remaining > 0) {
-        isPaused = false;
-        tickSound.play();
-      }
+      isPaused = false;
+      tickingSound.play().catch(() => {});
     }
 
     function resetTimer() {
       clearInterval(countdown);
-      clearInterval(getReadyCountdown);
-      isPaused = false;
-      remaining = duration;
-      updateDisplay(duration);
-      getReadyTextEl.textContent = '';
-      tickSound.pause();
-      tickSound.currentTime = 0;
+      clearInterval(getReadyInterval);
+      timeLeft = duration;
+      updateCircle();
+      tickingSound.pause();
+      tickingSound.currentTime = 0;
       bellSound.pause();
       bellSound.currentTime = 0;
+      getReadyText.textContent = "";
     }
   </script>
 </body>

@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fit Timer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="timer-container">
-    <div class="get-ready" id="getReady">Get Ready</div>
+    <div id="getReady" class="get-ready">Get Ready</div>
+
     <div class="circle">
-      <div class="countdown" id="countdown">3</div>
+      <div id="countdown" class="countdown">3</div>
       <svg class="progress-ring" width="200" height="200">
         <circle
           class="progress-ring__circle"
@@ -23,6 +24,7 @@
         />
       </svg>
     </div>
+
     <div class="controls">
       <button id="startBtn">Start</button>
       <button id="pauseBtn">Pause</button>
@@ -30,119 +32,118 @@
     </div>
   </div>
 
-  <audio id="tickingAudio" src="ticking.mp3" loop></audio>
-  <audio id="bellAudio" src="bell.mp3"></audio>
+  <audio id="tickSound" src="ticking.mp3" preload="auto" loop></audio>
+  <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
 
   <script>
+    const countdownEl = document.getElementById("countdown");
+    const getReadyEl = document.getElementById("getReady");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const tickSound = document.getElementById("tickSound");
+    const bellSound = document.getElementById("bellSound");
+    const circle = document.querySelector(".progress-ring__circle");
+
     let duration = 30;
     let timeLeft = duration;
-    let countdownEl = document.getElementById("countdown");
-    let getReadyEl = document.getElementById("getReady");
-    let startBtn = document.getElementById("startBtn");
-    let pauseBtn = document.getElementById("pauseBtn");
-    let resetBtn = document.getElementById("resetBtn");
-    let tickingAudio = document.getElementById("tickingAudio");
-    let bellAudio = document.getElementById("bellAudio");
-    let circle = document.querySelector(".progress-ring__circle");
+    let countdownInterval;
+    let isPaused = false;
+    let isRunning = false;
 
-    let radius = circle.r.baseVal.value;
-    let circumference = 2 * Math.PI * radius;
+    const radius = circle.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = circumference;
 
-    let timerInterval;
-    let getReadyInterval;
-    let isPaused = false;
-    let isRunning = false;
-    let isGetReady = true;
-
-    function setProgress(time) {
-      const offset = circumference - (time / duration) * circumference;
+    function setProgress(percent) {
+      const offset = circumference - (percent / 100) * circumference;
       circle.style.strokeDashoffset = offset;
     }
 
-    function startGetReadyCountdown() {
-      isGetReady = true;
-      let count = 3;
+    function startCountdown() {
+      let readyCount = 3;
       getReadyEl.style.display = "block";
-      countdownEl.style.display = "block";
-      countdownEl.textContent = count;
+      countdownEl.textContent = readyCount;
+      setProgress(0);
+      isPaused = false;
+      isRunning = false;
 
-      getReadyInterval = setInterval(() => {
-        count--;
-        countdownEl.textContent = count;
-        if (count === 0) {
-          clearInterval(getReadyInterval);
+      const readyInterval = setInterval(() => {
+        readyCount--;
+        if (readyCount >= 0) {
+          countdownEl.textContent = readyCount;
+        }
+        if (readyCount < 0) {
+          clearInterval(readyInterval);
           getReadyEl.style.display = "none";
-          countdownEl.textContent = timeLeft;
-          startTimer();
-          isGetReady = false;
+          beginMainCountdown();
         }
       }, 1000);
     }
 
-    function startTimer() {
+    function beginMainCountdown() {
       isRunning = true;
-      tickingAudio.play();
-      timerInterval = setInterval(() => {
+      tickSound.currentTime = 0;
+      tickSound.play();
+      countdownEl.textContent = timeLeft;
+      updateProgress();
+      countdownInterval = setInterval(() => {
         if (!isPaused) {
           timeLeft--;
           countdownEl.textContent = timeLeft;
-          setProgress(timeLeft);
+          updateProgress();
           if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            tickingAudio.pause();
-            tickingAudio.currentTime = 0;
-            bellAudio.play();
+            clearInterval(countdownInterval);
+            tickSound.pause();
+            tickSound.currentTime = 0;
+            bellSound.play();
+            setProgress(100);
             isRunning = false;
-            pauseBtn.textContent = "Pause";
           }
         }
       }, 1000);
     }
 
+    function updateProgress() {
+      const percent = ((duration - timeLeft) / duration) * 100;
+      setProgress(percent);
+    }
+
     startBtn.addEventListener("click", () => {
-      if (!isRunning && !isGetReady) {
-        timeLeft = duration;
-        setProgress(timeLeft);
-        countdownEl.textContent = timeLeft;
-        startGetReadyCountdown();
-      } else if (!isRunning && isGetReady === false) {
-        startGetReadyCountdown();
+      if (!isRunning && timeLeft === duration) {
+        startCountdown();
       }
     });
 
     pauseBtn.addEventListener("click", () => {
-      if (!isRunning || isGetReady) return;
-
-      isPaused = !isPaused;
-      if (isPaused) {
-        tickingAudio.pause();
-        pauseBtn.textContent = "Resume";
-      } else {
-        tickingAudio.play();
-        pauseBtn.textContent = "Pause";
+      if (isRunning) {
+        isPaused = !isPaused;
+        if (isPaused) {
+          pauseBtn.textContent = "Resume";
+          tickSound.pause();
+        } else {
+          pauseBtn.textContent = "Pause";
+          tickSound.play();
+        }
       }
     });
 
     resetBtn.addEventListener("click", () => {
-      clearInterval(timerInterval);
-      clearInterval(getReadyInterval);
+      clearInterval(countdownInterval);
+      tickSound.pause();
+      tickSound.currentTime = 0;
+      bellSound.pause();
+      bellSound.currentTime = 0;
       timeLeft = duration;
-      countdownEl.textContent = "3";
-      getReadyEl.style.display = "block";
-      setProgress(duration);
-      tickingAudio.pause();
-      tickingAudio.currentTime = 0;
-      bellAudio.pause();
-      bellAudio.currentTime = 0;
       isPaused = false;
       isRunning = false;
-      isGetReady = true;
+      countdownEl.textContent = "3";
       pauseBtn.textContent = "Pause";
+      getReadyEl.style.display = "block";
+      setProgress(0);
     });
-
-    setProgress(duration);
   </script>
 </body>
 </html>
+

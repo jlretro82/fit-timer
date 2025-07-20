@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitness Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="countdown-text" id="getReadyText">Get Ready</div>
+    <div class="timer" id="countdown">3</div>
+    <div class="buttons">
+      <button onclick="startTimer()">Start</button>
+      <button onclick="pauseTimer()">Pause</button>
+      <button onclick="resetTimer()">Reset</button>
+    </div>
+    <div class="circle" id="circle"></div>
+  </div>
+
+  <audio id="ticking" src="ticking.mp3" preload="auto"></audio>
+  <audio id="bell" src="bell.mp3" preload="auto"></audio>
+
+  <script src="timer.js"></script>
+</body>
+</html>

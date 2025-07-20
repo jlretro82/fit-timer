@@ -9,22 +9,20 @@
 <body>
   <div class="timer-container">
     <div class="get-ready" id="getReady">Get Ready</div>
-    
     <div class="circle">
       <div class="countdown" id="countdown">3</div>
-      <svg class="progress-ring" width="150" height="150">
+      <svg class="progress-ring" width="160" height="160">
         <circle
-          class="progress-ring_circle"
+          class="progress-ring__circle"
           stroke="#4BA3BB"
           stroke-width="10"
           fill="transparent"
-          r="65"
-          cx="75"
-          cy="75"
+          r="70"
+          cx="80"
+          cy="80"
         />
       </svg>
     </div>
-
     <div class="controls">
       <button id="startBtn">Start</button>
       <button id="pauseBtn">Pause</button>
@@ -37,58 +35,75 @@
     let timeLeft = duration;
     let isPaused = false;
     let isRunning = false;
+    let countdownEl = document.getElementById('countdown');
+    let getReadyEl = document.getElementById('getReady');
+    let ticking = new Audio('ticking.mp3');
+    let bell = new Audio('bell.mp3');
+    ticking.loop = true;
 
-    const countdownEl = document.getElementById('countdown');
-    const getReadyEl = document.getElementById('getReady');
-    const circle = document.querySelector('.progress-ring_circle');
+    const circle = document.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
-
-    const ticking = new Audio('ticking.mp3');
-    ticking.loop = true;
-    const bell = new Audio('bell.mp3');
-
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = circumference;
 
     function setProgress(percent) {
-      const offset = circumference - percent * circumference;
+      const offset = circumference - (percent / 100) * circumference;
       circle.style.strokeDashoffset = offset;
     }
 
-    function startCountdown() {
-      if (isRunning) return;
-      isRunning = true;
-      let ready = 3;
-      countdownEl.textContent = ready;
-      getReadyEl.style.display = 'block';
-
-      const readyInterval = setInterval(() => {
-        ready--;
-        if (ready > 0) {
-          countdownEl.textContent = ready;
-        } else {
-          clearInterval(readyInterval);
-          getReadyEl.style.display = 'none';
-          timeLeft = duration;
-          countdownEl.textContent = timeLeft;
-          ticking.play();
-          setProgress(0);
-          runMainCountdown();
-        }
-      }, 1000);
+    function resetCircle() {
+      setProgress(0);
     }
 
-    function runMainCountdown() {
-      const interval = setInterval(() => {
+    function showCountdown() {
+      getReadyEl.style.display = 'none';
+      countdownEl.style.display = 'block';
+    }
+
+    function showGetReady() {
+      getReadyEl.style.display = 'block';
+      countdownEl.style.display = 'none';
+    }
+
+    function startCountdown(duration) {
+      return new Promise((resolve) => {
+        let counter = 3;
+        countdownEl.textContent = counter;
+        showGetReady();
+        const countdownInterval = setInterval(() => {
+          counter--;
+          countdownEl.textContent = counter;
+          if (counter <= 0) {
+            clearInterval(countdownInterval);
+            showCountdown();
+            resolve();
+          }
+        }, 1000);
+      });
+    }
+
+    let interval;
+
+    async function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      resetCircle();
+      timeLeft = duration;
+      await startCountdown();
+      ticking.currentTime = 0;
+      ticking.play();
+
+      interval = setInterval(() => {
         if (!isPaused) {
-          timeLeft--;
-          countdownEl.textContent = timeLeft;
-          setProgress((duration - timeLeft) / duration);
-          if (timeLeft <= 0) {
+          if (timeLeft > 0) {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            const percent = ((duration - timeLeft) / duration) * 100;
+            setProgress(percent);
+          } else {
             clearInterval(interval);
             ticking.pause();
-            ticking.currentTime = 0;
             bell.play();
             isRunning = false;
           }
@@ -96,20 +111,42 @@
       }, 1000);
     }
 
-    document.getElementById('startBtn').addEventListener('click', startCountdown);
-    document.getElementById('pauseBtn').addEventListener('click', () => {
-      isPaused = !isPaused;
-    });
-    document.getElementById('resetBtn').addEventListener('click', () => {
+    function pauseTimer() {
+      isPaused = true;
+      ticking.pause();
+    }
+
+    function resumeTimer() {
+      if (!isRunning) return;
+      isPaused = false;
+      ticking.play();
+    }
+
+    function resetTimer() {
+      clearInterval(interval);
+      ticking.pause();
+      ticking.currentTime = 0;
+      bell.pause();
+      bell.currentTime = 0;
       isPaused = false;
       isRunning = false;
       timeLeft = duration;
-      countdownEl.textContent = duration;
-      setProgress(0);
-      getReadyEl.style.display = 'none';
-      ticking.pause();
-      ticking.currentTime = 0;
+      countdownEl.textContent = timeLeft;
+      resetCircle();
+      showCountdown();
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if (isPaused) {
+        resumeTimer();
+      } else {
+        startTimer();
+      }
     });
+
+    document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
+    document.getElementById('resetBtn').addEventListener('click', resetTimer);
   </script>
 </body>
 </html>
+

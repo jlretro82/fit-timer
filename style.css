@@ -1,0 +1,59 @@
+body {
+  background: #f9f9fc;
+  font-family: 'Helvetica Neue', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.timer-container {
+  text-align: center;
+  position: relative;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ring-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 12;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: #3b82f6; /* Your brand blue */
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 565.48;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.35s;
+}
+
+.time-display {
+  font-size: 48px;
+  margin: 110px auto 20px;
+  color: #111827;
+}
+
+.controls button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  margin: 0 4px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.controls button:hover {
+  background-color: #2563eb;
+}

@@ -84,4 +84,32 @@
         if (!isPaused) {
           timeLeft--;
           countdownEl.textContent = timeLeft;
-          setProgress((duratio
+          setProgress((duration - timeLeft) / duration);
+          if (timeLeft <= 0) {
+            clearInterval(interval);
+            ticking.pause();
+            ticking.currentTime = 0;
+            bell.play();
+            isRunning = false;
+          }
+        }
+      }, 1000);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startCountdown);
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      isPaused = !isPaused;
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      isPaused = false;
+      isRunning = false;
+      timeLeft = duration;
+      countdownEl.textContent = duration;
+      setProgress(0);
+      getReadyEl.style.display = 'none';
+      ticking.pause();
+      ticking.currentTime = 0;
+    });
+  </script>
+</body>
+</html>

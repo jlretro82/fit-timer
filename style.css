@@ -1,11 +1,12 @@
 body {
-  background: #f9f9fc;
+  background: #f5f8fa;
   font-family: 'Helvetica Neue', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
   margin: 0;
+  color: #1B1A1A;
 }
 
 .timer-container {
@@ -15,20 +16,21 @@ body {
 
 .progress-ring {
   transform: rotate(-90deg);
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
 }
 
 .ring-bg {
   fill: none;
-  stroke: #eee;
+  stroke: #B1ECFC;
   stroke-width: 12;
 }
 
 .ring-fill {
   fill: none;
-  stroke: #3b82f6; /* Your brand blue */
+  stroke: #4BA3BB;
   stroke-width: 12;
   stroke-linecap: round;
   stroke-dasharray: 565.48;
@@ -37,23 +39,34 @@ body {
 }
 
 .time-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 48px;
-  margin: 110px auto 20px;
-  color: #111827;
+  color: #19373E;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.controls {
+  margin-top: 40px;
 }
 
 .controls button {
-  background-color: #3b82f6;
+  background-color: #4BA3BB;
   color: white;
   border: none;
-  padding: 10px 16px;
-  margin: 0 4px;
+  padding: 10px 18px;
+  margin: 0 5px;
   font-size: 16px;
+  font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .controls button:hover {
-  background-color: #2563eb;
+  background-color: #19373E;
 }
+

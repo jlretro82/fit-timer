@@ -3,221 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Responsive Timer</title>
+  <title>Timer</title>
   <style>
-    :root {
-      --blue: #4BA3BB;
-      --dark: #19373E;
-      --light: #B1ECFC;
-      --background: #1B1A1A;
-      --muted: #767575;
-    }
-
     body {
-      background-color: var(--background);
-      color: var(--light);
+      background-color: #1B1A1A;
+      color: #B1ECFC;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: Arial, sans-serif;
       height: 100vh;
       margin: 0;
     }
 
-    #get-ready {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
+    #getReadyText {
+      font-size: 1.2rem;
+      margin-bottom: 0.3rem;
     }
 
-    .timer-container {
+    #circle {
       position: relative;
-      width: 200px;
-      height: 200px;
-      margin-bottom: 20px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 8px solid #4BA3BB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
     }
 
-    svg {
-      transform: rotate(-90deg);
-    }
-
-    circle {
-      fill: none;
-      stroke-width: 15;
-    }
-
-    .background-circle {
-      stroke: var(--muted);
-    }
-
-    .progress-circle {
-      stroke: var(--blue);
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s linear;
-    }
-
-    .time {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 2rem;
+    #timer {
+      font-size: 1.8rem;
       font-weight: bold;
+      color: #B1ECFC;
     }
 
-    .controls {
+    .button-group {
       display: flex;
       gap: 10px;
     }
 
     button {
-      padding: 8px 16px;
-      background-color: var(--blue);
-      color: var(--background);
-      border: none;
-      border-radius: 5px;
+      padding: 6px 14px;
       font-size: 0.9rem;
+      background-color: #19373E;
+      color: #B1ECFC;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.2s;
     }
 
-    button:disabled {
-      background-color: var(--muted);
-      cursor: not-allowed;
+    button:hover {
+      background-color: #4BA3BB;
     }
 
     @media (max-width: 500px) {
-      .timer-container {
-        width: 150px;
-        height: 150px;
+      #circle {
+        width: 100px;
+        height: 100px;
+        border-width: 6px;
       }
-
-      .time {
-        font-size: 1.5rem;
+      #timer {
+        font-size: 1.2rem;
       }
-
+      #getReadyText {
+        font-size: 1rem;
+      }
       button {
+        padding: 5px 10px;
         font-size: 0.8rem;
-        padding: 6px 12px;
       }
     }
   </style>
 </head>
 <body>
-  <div id="get-ready"></div>
-  <div class="timer-container">
-    <svg width="100%" height="100%">
-      <circle class="background-circle" r="90" cx="100" cy="100"/>
-      <circle class="progress-circle" r="90" cx="100" cy="100" stroke-dasharray="565.48" stroke-dashoffset="0"/>
-    </svg>
-    <div class="time" id="timer">30</div>
-  </div>
 
-  <div class="controls">
+  <div id="getReadyText"></div>
+  <div id="circle"><div id="timer">30</div></div>
+
+  <div class="button-group">
     <button onclick="startTimer()">Start</button>
     <button onclick="pauseTimer()">Pause</button>
     <button onclick="resumeTimer()">Resume</button>
     <button onclick="resetTimer()">Reset</button>
   </div>
 
-  <audio id="tick" src="https://actions.google.com/sounds/v1/alarms/clock_tick.ogg"></audio>
-  <audio id="bell" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+  <audio id="tick" src="https://www.soundjay.com/clock/sounds/clock-ticking-5.mp3" preload="auto"></audio>
+  <audio id="bell" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4e8c0161d6.mp3" preload="auto"></audio>
 
   <script>
     let duration = 30;
-    let timeLeft = duration;
-    let interval;
-    let ticking;
+    let countdown;
+    let getReadyCountdown;
+    let remaining = duration;
     let isPaused = false;
-    let isRunning = false;
 
-    const timerDisplay = document.getElementById('timer');
-    const getReadyDisplay = document.getElementById('get-ready');
+    const timerEl = document.getElementById('timer');
+    const getReadyTextEl = document.getElementById('getReadyText');
     const tickSound = document.getElementById('tick');
     const bellSound = document.getElementById('bell');
-    const progressCircle = document.querySelector(".progress-circle");
-    const radius = 90;
-    const circumference = 2 * Math.PI * radius;
 
-    progressCircle.style.strokeDasharray = circumference;
-
-    function setProgress(percent) {
-      const offset = circumference - percent * circumference;
-      progressCircle.style.strokeDashoffset = offset;
+    function updateDisplay(value) {
+      timerEl.textContent = value;
     }
 
     function startTimer() {
-      if (isRunning) return;
-      isRunning = true;
-      getReadyDisplay.innerText = "Get Ready";
-      let readyTime = 3;
-      timerDisplay.innerText = readyTime;
-      setProgress(0);
-      let readyInterval = setInterval(() => {
-        readyTime--;
-        timerDisplay.innerText = readyTime;
-        if (readyTime === 0) {
-          clearInterval(readyInterval);
-          getReadyDisplay.innerText = "";
-          startCountdown();
+      resetTimer();
+      getReadyTextEl.textContent = 'Get Ready...';
+      let getReady = 3;
+      updateDisplay(getReady);
+      getReadyCountdown = setInterval(() => {
+        getReady--;
+        if (getReady <= 0) {
+          clearInterval(getReadyCountdown);
+          getReadyTextEl.textContent = '';
+          beginMainCountdown();
+        } else {
+          updateDisplay(getReady);
         }
       }, 1000);
     }
 
-    function startCountdown() {
-      timeLeft = duration;
-      updateDisplay();
-      playTick();
-      interval = setInterval(() => {
+    function beginMainCountdown() {
+      remaining = duration;
+      updateDisplay(remaining);
+      tickSound.loop = true;
+      tickSound.play();
+      countdown = setInterval(() => {
         if (!isPaused) {
-          timeLeft--;
-          updateDisplay();
-          if (timeLeft === 0) {
-            clearInterval(interval);
-            stopTick();
+          remaining--;
+          updateDisplay(remaining);
+          if (remaining <= 0) {
+            clearInterval(countdown);
+            tickSound.pause();
+            tickSound.currentTime = 0;
             bellSound.play();
-            isRunning = false;
+            updateDisplay(0);
           }
         }
       }, 1000);
     }
 
-    function updateDisplay() {
-      timerDisplay.innerText = timeLeft;
-      setProgress(timeLeft / duration);
-    }
-
     function pauseTimer() {
       isPaused = true;
-      stopTick();
+      tickSound.pause();
     }
 
     function resumeTimer() {
-      if (!isRunning || timeLeft === 0) return;
-      isPaused = false;
-      playTick();
+      if (remaining > 0) {
+        isPaused = false;
+        tickSound.play();
+      }
     }
 
     function resetTimer() {
-      clearInterval(interval);
-      stopTick();
-      timeLeft = duration;
-      isRunning = false;
+      clearInterval(countdown);
+      clearInterval(getReadyCountdown);
       isPaused = false;
-      timerDisplay.innerText = duration;
-      getReadyDisplay.innerText = "";
-      setProgress(1);
-    }
-
-    function playTick() {
-      tickSound.loop = true;
-      tickSound.play().catch(() => {});
-    }
-
-    function stopTick() {
+      remaining = duration;
+      updateDisplay(duration);
+      getReadyTextEl.textContent = '';
       tickSound.pause();
       tickSound.currentTime = 0;
+      bellSound.pause();
+      bellSound.currentTime = 0;
     }
-
   </script>
 </body>
 </html>

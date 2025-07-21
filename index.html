@@ -5,30 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>30 sec Timer</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .timer-container {
-      transform: scale(0.8);
-      transform-origin: top center;
-      width: 250px;
-      margin: auto;
-      text-align: center;
-    }
-    .timer-label {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-    }
-  </style>
 </head>
 <body>
   <div class="timer-container">
-    <div class="timer-label">30 sec Timer</div>
+    <div class="label">30 sec Timer</div>
     <div id="getReady" class="get-ready">Get Ready</div>
     <div class="circle">
       <div id="countdown" class="countdown">3</div>
       <svg class="progress-ring" width="160" height="160">
-        <circle class="progress-ring__circle" stroke="#4BA3BB" stroke-width="10" fill="transparent" r="70" cx="80" cy="80"/>
+        <circle
+          class="progress-ring__circle"
+          stroke="#4BA3BB"
+          stroke-width="10"
+          fill="transparent"
+          r="70"
+          cx="80"
+          cy="80"
+        />
       </svg>
     </div>
     <div class="controls">
@@ -121,6 +114,7 @@
       isRunning = true;
       const startTime = Date.now();
       const endTime = startTime + timeLeft * 1000;
+
       tickSound.loop = true;
       playTick();
 
@@ -150,7 +144,9 @@
 
     pauseBtn.addEventListener("click", () => {
       if (!isRunning) return;
+
       isPaused = !isPaused;
+
       if (isPaused) {
         pauseBtn.textContent = "Resume";
         tickSound.pause();
@@ -164,6 +160,7 @@
       resetAll();
     });
 
+    // Initialize
     resetAll();
   </script>
 </body>

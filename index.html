@@ -3,26 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>30 Second Timer</title>
+  <title>30 sec Timer</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    .timer-label {
+    .timer-container {
+      transform: scale(0.8);
+      transform-origin: top center;
+      width: 250px;
+      margin: auto;
       text-align: center;
-      font-family: Arial, sans-serif;
-      font-size: 24px;
-      margin-top: 30px;
-      color: #19373E;
+    }
+    .timer-label {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <h2 class="timer-label">30 sec Timer</h2>
   <div class="timer-container">
+    <div class="timer-label">30 sec Timer</div>
     <div id="getReady" class="get-ready">Get Ready</div>
     <div class="circle">
       <div id="countdown" class="countdown">3</div>
       <svg class="progress-ring" width="160" height="160">
-        <circle class="progress-ring__circle" stroke="#4BA3BB" stroke-width="10" fill="transparent" r="70" cx="80" cy="80" />
+        <circle class="progress-ring__circle" stroke="#4BA3BB" stroke-width="10" fill="transparent" r="70" cx="80" cy="80"/>
       </svg>
     </div>
     <div class="controls">
@@ -31,8 +37,10 @@
       <button id="resetBtn">Reset</button>
     </div>
   </div>
+
   <audio id="tickSound" src="ticking.mp3" preload="auto"></audio>
   <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
+
   <script>
     let duration = 30;
     let timeLeft = duration;
@@ -113,7 +121,6 @@
       isRunning = true;
       const startTime = Date.now();
       const endTime = startTime + timeLeft * 1000;
-
       tickSound.loop = true;
       playTick();
 
@@ -157,7 +164,6 @@
       resetAll();
     });
 
-    // Initialize
     resetAll();
   </script>
 </body>

@@ -1,67 +1,61 @@
 
 body {
   margin: 0;
+  padding: 0;
   font-family: Helvetica, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 230px;
-  background: #e6f1f3;
+  background: #fff;
 }
 
 .timer-container {
-  text-align: center;
-  padding: 0;
-  width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 236px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-h2 {
+.title {
   font-size: 18px;
-  margin: 0;
+  font-weight: bold;
+  margin-bottom: 4px;
+  text-align: center;
 }
 
-.subhead {
-  font-size: 14px;
+.get-ready {
+  font-size: 16px;
   margin-bottom: 4px;
 }
 
-.countdown {
-  font-size: 24px;
-  font-weight: bold;
-  position: absolute;
-  top: 74px;
-  left: 50%;
-  transform: translateX(-50%);
+.circle {
+  position: relative;
+  height: 160px;
+  width: 160px;
 }
 
-.button-container {
-  margin-top: 16px;
+.countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 button {
-  background-color: #4BA3BB;
-  color: white;
-  font-size: 10px;
-  margin: 0 2px;
-  padding: 4px 6px;
-  border: none;
-  border-radius: 3px;
+  font-size: 14px;
+  padding: 6px 10px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #3c8fa6;
-}
-
-.circle-container {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
-}
-
-.progress-ring__circle {
-  transition: 0.5s stroke-dashoffset;
+.progress-ring {
   transform: rotate(-90deg);
-  transform-origin: 50% 50%;
 }

@@ -1,23 +1,30 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>40 sec Timer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>40 Second Timer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="timer-container">
-    <h2>40 sec Timer</h2>
-    <div class="subhead" id="getReady">Get Ready</div>
-    <div class="circle-container">
-      <svg class="progress-ring" width="120" height="120">
-        <circle class="progress-ring__circle" stroke="#4BA3BB" stroke-width="8" fill="transparent" r="50" cx="60" cy="60"/>
+    <div class="title">40-Second Timer</div>
+    <div id="getReady" class="get-ready">Get Ready</div>
+    <div class="circle">
+      <svg class="progress-ring" width="160" height="160">
+        <circle
+          class="progress-ring__circle"
+          stroke="#4BA3BB"
+          stroke-width="10"
+          fill="transparent"
+          r="70"
+          cx="80"
+          cy="80"
+        />
       </svg>
-      <div class="countdown" id="countdown">3</div>
+      <div id="countdown" class="countdown">40</div>
     </div>
-    <div class="button-container">
+    <div class="controls">
       <button id="startBtn">Start</button>
       <button id="pauseBtn">Pause</button>
       <button id="resetBtn">Reset</button>

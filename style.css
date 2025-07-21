@@ -1,65 +1,71 @@
 body {
+  font-family: 'Helvetica', sans-serif;
   margin: 0;
-  font-family: Helvetica, sans-serif;
-  background-color: #eaf1f3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding: 0;
+  background-color: #f0f5f7;
 }
 
-.timer-container {
-  background-color: #eaf1f3;
-  padding: 10px;
-  text-align: center;
-  box-sizing: border-box;
+.container {
+  width: 100%;
+  max-width: 200px;
   height: 236px;
-  width: 160px;
+  margin: auto;
+  background-color: #eaf1f3;
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
   overflow: hidden;
 }
 
-.label {
+.title {
   font-weight: bold;
   font-size: 14px;
-  margin-bottom: 4px;
 }
 
 .get-ready {
-  font-size: 16px;
-  margin-bottom: 4px;
+  margin-top: 2px;
+  font-size: 14px;
 }
 
-.countdown {
+.circle-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 10px auto;
+}
+
+#circle-timer {
+  transform: rotate(-90deg);
+}
+
+#time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 24px;
   font-weight: bold;
-  margin: 6px 0;
+  color: #1B1A1A;
 }
 
-.circle {
-  position: relative;
+.buttons {
   display: flex;
   justify-content: center;
-  align-items: center;
-}
-
-.progress-ring__circle {
-  transition: stroke-dashoffset 1s linear;
-  transform: rotate(-90deg);
-  transform-origin: center;
-}
-
-.controls {
+  gap: 5px;
   margin-top: 6px;
 }
 
 button {
-  margin: 0 2px;
-  padding: 4px 10px;
-  border: none;
+  font-size: 12px;
+  padding: 4px 8px;
   background-color: #4BA3BB;
   color: white;
+  border: none;
   border-radius: 4px;
-  font-weight: bold;
-  font-size: 12px;
   cursor: pointer;
+}
+
+button:hover {
+  background-color: #3a8da4;
 }

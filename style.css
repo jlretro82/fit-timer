@@ -1,56 +1,69 @@
-
 body {
   margin: 0;
+  padding: 0;
   font-family: Helvetica, sans-serif;
-  background-color: #e8f0f2;
-  overflow: hidden;
+  background-color: #e8f1f3;
 }
+
 .container {
   text-align: center;
+  height: 236px;
   padding: 10px;
   box-sizing: border-box;
-  height: 100%;
 }
-h2 {
-  font-size: 18px;
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
   margin: 0;
 }
+
 .get-ready {
   font-size: 14px;
   margin: 4px 0;
 }
+
 .circle-container {
   position: relative;
   width: 100px;
   height: 100px;
-  margin: 10px auto;
+  margin: 6px auto;
 }
-.circle {
+
+.progress-ring {
   transform: rotate(-90deg);
 }
-.time {
+
+.progress-ring__circle {
+  stroke: #4ba3bb;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+#countdown {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 20px;
   font-weight: bold;
+  color: #1b1a1a;
 }
-.buttons {
+
+.button-container {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 6px;
 }
+
 button {
-  padding: 4px 10px;
-  background-color: #4BA3BB;
+  background-color: #4ba3bb;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 12px;
+  padding: 3px 8px;
   cursor: pointer;
-}
-button:hover {
-  background-color: #357a91;
+  font-size: 12px;
 }

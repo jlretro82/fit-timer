@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>20 Second Timer</title>
+  <title>Fit Timer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="timer-container">
-    <div class="title">20-Second Timer</div>
+    <div class="title">20 Seconds</div>
     <div id="getReady" class="get-ready">Get Ready</div>
     <div class="circle">
+      <div id="countdown" class="countdown">3</div>
       <svg class="progress-ring" width="160" height="160">
         <circle
           class="progress-ring__circle"
@@ -22,7 +23,6 @@
           cy="80"
         />
       </svg>
-      <div id="countdown" class="countdown">20</div>
     </div>
     <div class="controls">
       <button id="startBtn">Start</button>
@@ -30,6 +30,7 @@
       <button id="resetBtn">Reset</button>
     </div>
   </div>
+
   <audio id="tickSound" src="tick.mp3" preload="auto"></audio>
   <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
   <script src="script.js"></script>

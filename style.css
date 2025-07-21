@@ -1,85 +1,60 @@
 body {
   margin: 0;
-  padding: 0;
-  background-color: #e9eff1;
-  font-family: Helvetica, Arial, sans-serif;
-  text-align: center;
+  font-family: Helvetica, sans-serif;
+  background-color: #eaf1f4;
 }
 
 .timer-container {
   width: 240px;
-  height: 260px;
+  height: 240px;
   margin: auto;
-  background-color: #e9eff1;
   padding: 10px;
+  background-color: #ecf0f1;
   border-radius: 10px;
+  text-align: center;
   box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .get-ready {
-  font-size: 18px;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
   font-weight: bold;
-  margin: 5px 0;
 }
 
-.label {
+.countdown {
+  font-size: 2rem;
   font-weight: bold;
-  font-size: 16px;
-  margin: 4px 0;
+  margin: 10px 0;
 }
 
 .circle {
   position: relative;
-  width: 160px;
-  height: 160px;
-  margin: 0 auto;
+  display: inline-block;
+  margin: 0 auto 10px;
 }
 
-.countdown {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 28px;
-  font-weight: bold;
-  color: #1B1A1A;
-}
-
-.progress-ring {
+.progress-ring__circle {
+  transition: stroke-dashoffset 1s linear;
   transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }
 
 .controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 6px;
+  margin-top: 5px;
 }
 
 button {
-  background-color: #4BA3BB;
-  color: white;
-  border: none;
   padding: 6px 12px;
-  border-radius: 5px;
-  cursor: pointer;
+  margin: 4px;
+  background-color: #4ba3bb;
+  border: none;
+  color: white;
   font-weight: bold;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
 }
 
 button:hover {
-  background-color: #3b92a8;
-}
-
-iframe {
-  border: none;
-  overflow: hidden;
-  width: 260px;
-  height: 280px;
+  background-color: #3b8ca3;
 }

@@ -2,68 +2,53 @@ body {
   margin: 0;
   padding: 0;
   font-family: Helvetica, sans-serif;
-  background-color: #e8f1f3;
+  background: #eaf3f6;
 }
-
 .container {
-  text-align: center;
-  height: 236px;
-  padding: 10px;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: #eaf3f6;
 }
-
 .title {
-  font-size: 16px;
   font-weight: bold;
-  margin: 0;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
-
-.get-ready {
-  font-size: 14px;
-  margin: 4px 0;
-}
-
 .circle-container {
   position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 6px auto;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
 }
-
 .progress-ring {
   transform: rotate(-90deg);
 }
-
 .progress-ring__circle {
-  stroke: #4ba3bb;
-  stroke-dasharray: 283;
-  stroke-dashoffset: 0;
+  stroke: #4BA3BB;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314;
   transition: stroke-dashoffset 1s linear;
 }
-
-#countdown {
+.time {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
-  color: #1b1a1a;
 }
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-button {
-  background-color: #4ba3bb;
-  color: white;
+.buttons button {
+  margin: 4px;
+  padding: 6px 12px;
+  background-color: #4BA3BB;
   border: none;
+  color: white;
   border-radius: 4px;
-  padding: 3px 8px;
   cursor: pointer;
-  font-size: 12px;
+}
+.buttons button:hover {
+  background-color: #3b8ea0;
 }

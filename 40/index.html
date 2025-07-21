@@ -2,36 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fit Timer</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Timer</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="timer-container">
-    <div class="timer-label">40 Seconds</div> 
-    <div id="get-ready" class="get-ready">Get Ready</div>
-    <div class="circle">
-      <svg width="120" height="120">
-        <circle
-          r="45"
-          cx="60"
-          cy="60"
-          stroke="#4BA3BB"
-          stroke-width="10"
-          fill="transparent"
-        />
+  <div class="container">
+    <div class="title">Get Ready</div>
+    <div class="circle-container">
+      <svg class="progress-ring" width="120" height="120">
+        <circle class="progress-ring__circle" stroke-width="10" fill="transparent" r="50" cx="60" cy="60"/>
       </svg>
-      <div id="time" class="countdown">3</div>
+      <div class="time" id="time">3</div>
     </div>
-    <div class="controls">
-      <button id="startBtn">Start</button>
-      <button id="pauseBtn">Pause</button>
-      <button id="resetBtn">Reset</button>
+    <div class="buttons">
+      <button onclick="startTimer()">Start</button>
+      <button onclick="pauseTimer()">Pause</button>
+      <button onclick="resetTimer()">Reset</button>
     </div>
   </div>
-
-  <audio id="tickSound" src="tick.mp3" preload="auto"></audio>
-  <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
+  <audio id="tick" src="tick.mp3" preload="auto"></audio>
+  <audio id="bell" src="bell.mp3" preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html>

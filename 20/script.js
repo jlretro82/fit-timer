@@ -1,119 +1,64 @@
-let duration = 20; 
+let countdown;
 let timeLeft = 3;
-let interval;
-let prepInterval;
+let totalDuration = 30;
 let isPaused = false;
-let currentPhase = "prep";
+let circle = document.querySelector(".progress-ring__circle");
+let radius = circle.r.baseVal.value;
+let circumference = 2 * Math.PI * radius;
+let tick = document.getElementById("tick");
+let bell = document.getElementById("bell");
 
-const timeDisplay = document.getElementById("time");
-const getReadyText = document.getElementById("get-ready");
-const circle = document.querySelector("circle");
-const startBtn = document.getElementById("startBtn");
-const pauseBtn = document.getElementById("pauseBtn");
-const resetBtn = document.getElementById("resetBtn");
-const tickSound = document.getElementById("tickSound");
-const bellSound = document.getElementById("bellSound");
+circle.style.strokeDasharray = `${circumference}`;
+circle.style.strokeDashoffset = `${circumference}`;
 
-const radius = 45;
-const circumference = 2 * Math.PI * radius;
-circle.style.strokeDasharray = circumference;
-circle.style.strokeDashoffset = circumference;
-
-function setCircleProgress(percent) {
-  const offset = circumference - (percent / 100) * circumference;
+function setProgress(time) {
+  const percent = time / totalDuration;
+  const offset = circumference * (1 - percent);
   circle.style.strokeDashoffset = offset;
 }
 
-function playTick() {
-  tickSound.currentTime = 0;
-  tickSound.play();
-}
-
-function stopTick() {
-  tickSound.pause();
-  tickSound.currentTime = 0;
-}
-
-function playBell() {
-  bellSound.currentTime = 0;
-  bellSound.play();
-}
-
-function resetTimer() {
-  clearInterval(interval);
-  clearInterval(prepInterval);
-  stopTick();
-  isPaused = false;
-  currentPhase = "prep";
-  timeLeft = 3;
-  timeDisplay.textContent = timeLeft;
-  getReadyText.style.display = "block";
-  setCircleProgress(0);
-  pauseBtn.textContent = "Pause";
-}
-
-function startPrepCountdown() {
-  let prepTime = 3;
-  timeLeft = prepTime;
-  getReadyText.style.display = "block";
-  timeDisplay.textContent = prepTime;
-  playTick();
-
-  prepInterval = setInterval(() => {
-    if (isPaused) return;
-
-    prepTime--;
-    if (prepTime >= 0) {
-      timeDisplay.textContent = prepTime;
-      playTick();
-    } else {
-      clearInterval(prepInterval);
-      getReadyText.style.display = "none";
-      startMainCountdown();
-    }
-  }, 1000);
-}
-
-function startMainCountdown() {
-  timeLeft = duration;
-  currentPhase = "main";
-  playTick();
-  tickSound.loop = true;
-
-  interval = setInterval(() => {
-    if (isPaused) return;
-
-    timeLeft--;
-    timeDisplay.textContent = timeLeft;
-    const progress = ((duration - timeLeft) / duration) * 100;
-    setCircleProgress(progress);
-
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      stopTick();
-      playBell();
-      setCircleProgress(100);
-    }
-  }, 1000);
+function updateTime() {
+  document.getElementById("time").textContent = timeLeft;
+  setProgress(timeLeft);
 }
 
 function startTimer() {
-  resetTimer();
-  startPrepCountdown();
+  if (countdown || timeLeft <= 0) return;
+  isPaused = false;
+  tick.loop = true;
+  tick.play();
+  countdown = setInterval(() => {
+    if (!isPaused) {
+      timeLeft--;
+      updateTime();
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        countdown = null;
+        tick.pause();
+        tick.currentTime = 0;
+        bell.play();
+      }
+    }
+  }, 1000);
 }
 
 function pauseTimer() {
   isPaused = !isPaused;
-
   if (isPaused) {
-    pauseBtn.textContent = "Resume";
-    tickSound.pause();
+    tick.pause();
   } else {
-    pauseBtn.textContent = "Pause";
-    if (currentPhase === "main") tickSound.play();
+    tick.play();
   }
 }
 
-startBtn.addEventListener("click", startTimer);
-pauseBtn.addEventListener("click", pauseTimer);
-resetBtn.addEventListener("click", resetTimer);
+function resetTimer() {
+  clearInterval(countdown);
+  countdown = null;
+  timeLeft = 3;
+  updateTime();
+  tick.pause();
+  tick.currentTime = 0;
+  bell.pause();
+  bell.currentTime = 0;
+}
+updateTime();

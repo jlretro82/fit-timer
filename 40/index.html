@@ -2,29 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fit Timer</title>
   <link rel="stylesheet" href="style.css" />
-  <title>40 sec Timer</title>
 </head>
 <body>
-  <div class="container">
-    <h2>40 sec Timer</h2>
-    <p class="get-ready" id="get-ready">Get Ready</p>
-    <div class="circle-container">
-      <svg class="circle" width="100" height="100">
-        <circle cx="50" cy="50" r="45" stroke="#4BA3BB" stroke-width="6" fill="none" />
+  <div class="timer-container">
+    <div class="timer-label">40 Seconds</div> <!
+    <div id="get-ready" class="get-ready">Get Ready</div>
+    <div class="circle">
+      <svg width="120" height="120">
+        <circle
+          r="45"
+          cx="60"
+          cy="60"
+          stroke="#4BA3BB"
+          stroke-width="10"
+          fill="transparent"
+        />
       </svg>
-      <div class="time" id="time">3</div>
+      <div id="time" class="countdown">3</div>
     </div>
-    <div class="buttons">
-      <button onclick="startTimer()">Start</button>
-      <button onclick="pauseTimer()">Pause</button>
-      <button onclick="resetTimer()">Reset</button>
+    <div class="controls">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="resetBtn">Reset</button>
     </div>
   </div>
-  <script>
-    const duration = 40;
-  </script>
+
+  <audio id="tickSound" src="tick.mp3" preload="auto"></audio>
+  <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html>

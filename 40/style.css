@@ -1,54 +1,67 @@
+
 body {
   margin: 0;
-  padding: 0;
   font-family: Helvetica, sans-serif;
-  background: #eaf3f6;
-}
-.container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 16px;
-  background-color: #eaf3f6;
+  align-items: center;
+  height: 230px;
+  background: #e6f1f3;
 }
-.title {
-  font-weight: bold;
+
+.timer-container {
+  text-align: center;
+  padding: 0;
+  width: 160px;
+}
+
+h2 {
   font-size: 18px;
-  margin-bottom: 10px;
+  margin: 0;
 }
+
+.subhead {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.countdown {
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute;
+  top: 74px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.button-container {
+  margin-top: 16px;
+}
+
+button {
+  background-color: #4BA3BB;
+  color: white;
+  font-size: 10px;
+  margin: 0 2px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3c8fa6;
+}
+
 .circle-container {
   position: relative;
   width: 120px;
   height: 120px;
-  margin-bottom: 10px;
+  margin: 0 auto;
 }
-.progress-ring {
-  transform: rotate(-90deg);
-}
+
 .progress-ring__circle {
-  stroke: #4BA3BB;
-  stroke-dasharray: 314;
-  stroke-dashoffset: 314;
-  transition: stroke-dashoffset 1s linear;
-}
-.time {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  font-weight: bold;
-}
-.buttons button {
-  margin: 4px;
-  padding: 6px 12px;
-  background-color: #4BA3BB;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.buttons button:hover {
-  background-color: #3b8ea0;
+  transition: 0.5s stroke-dashoffset;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }

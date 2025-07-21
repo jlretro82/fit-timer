@@ -1,89 +1,56 @@
 
 body {
-  font-family: Helvetica, sans-serif;
-  background-color: #e9f1f3;
   margin: 0;
-  padding: 0;
+  font-family: Helvetica, sans-serif;
+  background-color: #e8f0f2;
+  overflow: hidden;
 }
-
-.timer-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 12px;
+.container {
+  text-align: center;
+  padding: 10px;
   box-sizing: border-box;
-  background-color: #e9f1f3;
+  height: 100%;
 }
-
-.label {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 2px;
-  text-align: center;
+h2 {
+  font-size: 18px;
+  margin: 0;
 }
-
 .get-ready {
-  margin-bottom: 8px;
-  font-size: 16px;
-  text-align: center;
+  font-size: 14px;
+  margin: 4px 0;
 }
-
 .circle-container {
   position: relative;
-  width: 80px;
-  height: 80px;
-  margin-bottom: 12px;
+  width: 100px;
+  height: 100px;
+  margin: 10px auto;
 }
-
-svg {
-  transform: rotate(-90deg);
-  width: 80px;
-  height: 80px;
-}
-
-.circle-bg {
-  fill: none;
-  stroke: #f0f0f0;
-  stroke-width: 6;
-}
-
 .circle {
-  fill: none;
-  stroke: #4BA3BB;
-  stroke-width: 6;
-  stroke-linecap: round;
-  stroke-dasharray: 251.2;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s linear;
+  transform: rotate(-90deg);
 }
-
-#countdown {
+.time {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 20px;
   font-weight: bold;
-  color: #1B1A1A;
 }
-
-.button-container {
+.buttons {
   display: flex;
-  gap: 6px;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
 }
-
 button {
+  padding: 4px 10px;
   background-color: #4BA3BB;
   color: white;
   border: none;
-  padding: 6px 10px;
   border-radius: 4px;
   font-size: 12px;
   cursor: pointer;
 }
-
 button:hover {
-  background-color: #3a8a9f;
+  background-color: #357a91;
 }

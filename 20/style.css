@@ -3,36 +3,54 @@ body {
   margin: 0;
   padding: 0;
   font-family: Helvetica, sans-serif;
-  background: #fff;
+  background-color: #B1ECFC;  /* Light Teal/Aqua */
 }
 
 .timer-container {
+  width: 160px;
+  height: 236px;
+  margin: auto;
+  background-color: #FFFFFF;  /* white background */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 236px;
-  width: 100%;
+  justify-content: space-between;
   padding: 10px;
   box-sizing: border-box;
+  border-radius: 8px;
 }
 
 .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 4px;
+  color: #65929D;  /* Mid Teal Website text header */
+  margin: 0;
   text-align: center;
 }
 
 .get-ready {
-  font-size: 16px;
-  margin-bottom: 4px;
+  font-size: 14px;
+  color: #494747;  /* Dark Gray */
+  margin: 4px 0;
 }
 
 .circle {
   position: relative;
-  height: 160px;
-  width: 160px;
+  width: 120px;
+  height: 120px;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring__circle {
+  stroke: #4BA3BB;         /* Mid Teal */
+  stroke-width: 10;
+  fill: transparent;
+  stroke-dasharray: 439.82; /* 2 * pi * 70 */
+  stroke-dashoffset: 439.82;
+  transition: stroke-dashoffset 1s linear;
 }
 
 .countdown {
@@ -40,22 +58,27 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
+  color: #1B1A1A;  /* Black */
 }
 
 .controls {
   display: flex;
   gap: 8px;
-  margin-top: 6px;
+  margin-bottom: 4px;
 }
 
-button {
-  font-size: 14px;
+.controls button {
+  background-color: #4BA3BB;  /* Mid Teal */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
   padding: 6px 10px;
+  font-size: 12px;
   cursor: pointer;
 }
 
-.progress-ring {
-  transform: rotate(-90deg);
+.controls button:hover {
+  background-color: #326D7D;  /* Darker Mid Teal on hover */
 }

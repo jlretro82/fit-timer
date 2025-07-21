@@ -1,4 +1,4 @@
-let duration = 30; // You can override this per timer page
+let duration = 30; 
 let timeLeft = 3;
 let interval;
 let prepInterval;

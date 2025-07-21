@@ -8,21 +8,87 @@
 </head>
 <body>
   <div class="container">
-    <div class="title">30 sec Timer</div>
-    <div class="get-ready" id="getReady">Get Ready</div>
-    <div class="circle-container">
-      <svg id="circle-timer" width="100" height="100">
-        <circle r="45" cx="50" cy="50" fill="transparent" stroke="#4BA3BB" stroke-width="10" stroke-dasharray="283" stroke-dashoffset="0"></circle>
-      </svg>
-      <div id="time">3</div>
-    </div>
-    <div class="buttons">
-      <button id="startBtn">Start</button>
-      <button id="pauseBtn">Pause</button>
-      <button id="resetBtn">Reset</button>
+    <h1>30 sec Timer</h1>
+    <div id="get-ready">Get Ready</div>
+    <div id="countdown">3</div>
+    <svg>
+      <circle r="28" cx="30" cy="30" stroke-dasharray="176" stroke-dashoffset="0"></circle>
+    </svg>
+    <div>
+      <button onclick="start()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
     </div>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    let duration = 30;
+    let remaining = duration;
+    let countdown = 3;
+    let interval, countdownInterval;
+    let isRunning = false;
+
+    const countdownEl = document.getElementById("countdown");
+    const getReadyEl = document.getElementById("get-ready");
+    const circle = document.querySelector("circle");
+    const dashArray = 176;
+
+    function updateCircle() {
+      const progress = (remaining / duration);
+      circle.style.strokeDashoffset = dashArray * (1 - progress);
+    }
+
+    function tick() {
+      if (remaining > 0) {
+        remaining--;
+        countdownEl.innerText = remaining;
+        updateCircle();
+      } else {
+        clearInterval(interval);
+      }
+    }
+
+    function startMainTimer() {
+      getReadyEl.style.display = "none";
+      countdownEl.innerText = remaining;
+      updateCircle();
+      interval = setInterval(tick, 1000);
+      isRunning = true;
+    }
+
+    function start() {
+      if (isRunning) return;
+      getReadyEl.innerText = "Get Ready";
+      countdownEl.innerText = countdown;
+      getReadyEl.style.display = "block";
+
+      countdownInterval = setInterval(() => {
+        countdown--;
+        countdownEl.innerText = countdown;
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          startMainTimer();
+        }
+      }, 1000);
+    }
+
+    function pause() {
+      clearInterval(interval);
+      clearInterval(countdownInterval);
+      isRunning = false;
+    }
+
+    function reset() {
+      pause();
+      remaining = duration;
+      countdown = 3;
+      getReadyEl.style.display = "block";
+      getReadyEl.innerText = "Get Ready";
+      countdownEl.innerText = countdown;
+      updateCircle();
+    }
+
+    reset();
+  </script>
 </body>
 </html>
-

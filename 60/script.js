@@ -1,4 +1,4 @@
-const duration = 40;
+const duration = 60;
 let timeLeft = duration;
 let isPaused = false;
 let isRunning = false;

@@ -195,6 +195,28 @@ function startHandler() {
   }
 
   resetAll();
+
+  // Unlock the finish bell during the user's Start tap
+  bellSound.volume = 0;
+
+  const unlockBell = bellSound.play();
+
+  if (unlockBell !== undefined) {
+    unlockBell
+      .then(() => {
+        bellSound.pause();
+        bellSound.currentTime = 0;
+        bellSound.volume = 1;
+      })
+      .catch(() => {
+        bellSound.volume = 1;
+      });
+  }
+
+  startGetReady();
+}
+
+  resetAll();
   startGetReady();
 }
 

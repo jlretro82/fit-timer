@@ -29,7 +29,7 @@ circle.style.strokeDashoffset = circumference;
   We restart it well BEFORE the end so the browser never
   reaches the MP3 end padding / loop gap.
 */
-const TICK_RESTART_POINT = 44.3;
+const TICK_RESTART_POINT = 44.1;
 
 function setCircleProgress(percent) {
   const offset =

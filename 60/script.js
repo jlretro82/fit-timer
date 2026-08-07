@@ -1,8 +1,8 @@
 const duration = 60;
 
 let timeLeft = duration;
-let isPaused = false;
-let isRunning = false;
+let readyCount = 3;
+let phase = "idle";
 let mainInterval = null;
 let readyInterval = null;
 
@@ -23,55 +23,56 @@ const circumference = 2 * Math.PI * radius;
 circle.style.strokeDasharray = `${circumference} ${circumference}`;
 circle.style.strokeDashoffset = circumference;
 
+/*
+  The tick MP3 is about 49 seconds long.
+
+  We restart it well BEFORE the end so the browser never
+  reaches the MP3 end padding / loop gap.
+*/
+const TICK_RESTART_POINT = 45.5;
+
 function setCircleProgress(percent) {
-  const offset = circumference - (percent / 100) * circumference;
+  const offset =
+    circumference - (percent / 100) * circumference;
+
   circle.style.strokeDashoffset = offset;
 }
 
 function stopTickSound() {
   tickSound.pause();
-  tickSound.currentTime = 0;
+
+  try {
+    tickSound.currentTime = 0;
+  } catch (e) {}
 }
 
 function stopBellSound() {
   bellSound.pause();
-  bellSound.currentTime = 0;
+
+  try {
+    bellSound.currentTime = 0;
+  } catch (e) {}
 }
 
-function playTickSound() {
+function startTickSound() {
   tickSound.loop = false;
-  tickSound.currentTime = 0;
 
-  const playPromise = tickSound.play();
+  try {
+    tickSound.currentTime = 0;
+  } catch (e) {}
 
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {});
-  }
-}
-
-function playBellSound() {
-  bellSound.loop = false;
-  bellSound.currentTime = 0;
-
-  const playPromise = bellSound.play();
-
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {});
-  }
+  tickSound.play().catch(() => {});
 }
 
 /*
-  The ticking file is about 49 seconds long.
-
-  Restart it slightly BEFORE it reaches the end so there
-  isn't a silent gap when the audio file finishes.
+  IMPORTANT:
+  This keeps the ticking continuous by jumping back to
+  the beginning BEFORE the 49-second file reaches its end.
 */
 tickSound.addEventListener("timeupdate", () => {
   if (
-    isRunning &&
-    !isPaused &&
-    tickSound.duration &&
-    tickSound.currentTime >= tickSound.duration - 0.25
+    phase === "running" &&
+    tickSound.currentTime >= TICK_RESTART_POINT
   ) {
     tickSound.currentTime = 0;
 
@@ -82,22 +83,23 @@ tickSound.addEventListener("timeupdate", () => {
 });
 
 function resetAll() {
-  clearInterval(mainInterval);
   clearInterval(readyInterval);
+  clearInterval(mainInterval);
 
-  mainInterval = null;
   readyInterval = null;
+  mainInterval = null;
 
-  isPaused = false;
-  isRunning = false;
+  phase = "idle";
   timeLeft = duration;
+  readyCount = 3;
 
   stopTickSound();
   stopBellSound();
 
-  countdownEl.textContent = "3";
-  getReadyEl.textContent = "Get Ready";
   getReadyEl.style.display = "block";
+  getReadyEl.textContent = "Get Ready";
+
+  countdownEl.textContent = "3";
 
   pauseBtn.textContent = "Pause";
 
@@ -105,14 +107,20 @@ function resetAll() {
 }
 
 function startGetReady() {
-  let readyCount = 3;
+  phase = "ready";
+  readyCount = 3;
 
-  countdownEl.textContent = readyCount;
-  getReadyEl.textContent = "Get Ready";
+  /*
+    NO TICKING SOUND during Get Ready.
+  */
+  stopTickSound();
+
   getReadyEl.style.display = "block";
+  getReadyEl.textContent = "Get Ready";
+  countdownEl.textContent = readyCount;
 
   readyInterval = setInterval(() => {
-    if (isPaused) return;
+    if (phase !== "ready") return;
 
     readyCount--;
 
@@ -122,24 +130,28 @@ function startGetReady() {
       clearInterval(readyInterval);
       readyInterval = null;
 
-      getReadyEl.style.display = "none";
-      countdownEl.textContent = duration;
-
       startMainTimer();
     }
   }, 1000);
 }
 
 function startMainTimer() {
-  isRunning = true;
+  phase = "running";
   timeLeft = duration;
 
+  getReadyEl.style.display = "none";
   countdownEl.textContent = timeLeft;
 
-  playTickSound();
+  setCircleProgress(0);
+
+  /*
+    Ticking begins HERE — when the actual
+    60-second workout timer begins.
+  */
+  startTickSound();
 
   mainInterval = setInterval(() => {
-    if (isPaused) return;
+    if (phase !== "running") return;
 
     timeLeft = Math.max(0, timeLeft - 1);
 
@@ -150,34 +162,56 @@ function startMainTimer() {
 
     setCircleProgress(progress);
 
-    if (timeLeft <= 0) {
-      clearInterval(mainInterval);
-      mainInterval = null;
-
-      isRunning = false;
-
-      stopTickSound();
-      playBellSound();
+    if (timeLeft === 0) {
+      finishTimer();
     }
   }, 1000);
 }
 
+function finishTimer() {
+  clearInterval(mainInterval);
+  mainInterval = null;
+
+  phase = "done";
+
+  stopTickSound();
+
+  bellSound.loop = false;
+
+  try {
+    bellSound.currentTime = 0;
+  } catch (e) {}
+
+  bellSound.play().catch(() => {});
+
+  pauseBtn.textContent = "Pause";
+}
+
 function startHandler() {
-  if (isRunning) return;
+  if (
+    phase === "ready" ||
+    phase === "running" ||
+    phase === "paused"
+  ) {
+    return;
+  }
 
   resetAll();
   startGetReady();
 }
 
 function pauseHandler() {
-  if (!isRunning) return;
-
-  isPaused = !isPaused;
-
-  if (isPaused) {
+  if (phase === "running") {
+    phase = "paused";
     pauseBtn.textContent = "Resume";
+
     tickSound.pause();
-  } else {
+
+    return;
+  }
+
+  if (phase === "paused") {
+    phase = "running";
     pauseBtn.textContent = "Pause";
 
     tickSound.play().catch(() => {});
